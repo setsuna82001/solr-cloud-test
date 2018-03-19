@@ -1,0 +1,35 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+TABLE = {
+  # port => name synbol
+  10  => :zk,
+  20  => :solr,
+  21  => :solr,
+}
+
+Vagrant.configure(2) do |config|
+  # initialize vm box
+  config.vm.box = 'centos7'
+  config.vm.box_url = 'https://github.com/CommanderK5/packer-centos-template/releases/download/0.7.2/vagrant-centos-7.2.box'
+
+  # vm defining
+  TABLE.each{|ip, symbol|
+    hostport  = 3300 + ip
+    ipaddress = "192.168.33.#{ip}"
+    defname   = "#{symbol}_#{ip}".to_sym
+
+    config.vm.define defname do |node|
+      node.vm.network :forwarded_port, guest: 22, host: hostport, id: 'ssh'
+      node.vm.network :private_network, ip: ipaddress
+
+      # 個別設定
+      if symbol == :solr
+        node.vm.provider :virtualbox do |vb|
+          vb.memory = 1024
+        end
+      end
+
+    end
+  }
+end
