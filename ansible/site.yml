@@ -1,0 +1,26 @@
+---
+# 共通ジョブ
+- hosts:
+    - solrs
+    - zks
+  become: yes
+  roles:
+    - java
+
+
+# solr role
+- hosts:
+    - solrs
+  roles:
+    - role: solr4
+      tags: solr4
+    - role: solr5
+      tags: solr5
+    - role: solr6
+      tags: solr6
+
+# zk role
+- hosts:
+    - zks
+  roles:
+    - zookeeper
