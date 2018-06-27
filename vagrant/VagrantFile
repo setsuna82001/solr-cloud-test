@@ -4,6 +4,8 @@
 TABLE = {
   # port => name synbol
   10  => :zk,
+  11  => :zk,
+  13  => :zk,
   20  => :solr,
   21  => :solr,
 }
@@ -24,11 +26,11 @@ Vagrant.configure(2) do |config|
       node.vm.network :private_network, ip: ipaddress
 
       # 個別設定
-      if symbol == :solr
+      #if symbol == :solr
         node.vm.provider :virtualbox do |vb|
-          vb.memory = 1024
+          vb.memory = 512
         end
-      end
+      #end
 
     end
   }
