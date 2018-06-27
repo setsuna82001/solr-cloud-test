@@ -1,0 +1,64 @@
+version: '3'
+networks:
+  solr:
+services:
+  solr1:  &solr_default
+    container_name: solr1
+    image: solr:7.3
+    ports:
+      - 8901:8983
+    volumes:
+      - ./solr/solr.in.sh:/opt/solr/bin/solr.in.sh
+    entrypoint:
+      - docker-entrypoint.sh
+      - solr
+      - start
+      - -f
+      - -c
+      - -z
+      - zk1:2181,zk2:2181
+      #- -a
+      #- "-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=1044"
+    networks:
+      - solr
+  solr2:
+    <<: *solr_default
+    container_name: solr2
+    ports:
+      - 8902:8983
+
+  zk1:  &zk_default
+    image: zookeeper:3.4
+    container_name: zk1
+    hostname: zk1
+    ports:
+      - 2101:2181
+    environment:
+      ZOO_MY_ID: 1
+    volumes:
+      - ./zookeeper/zoo.cfg:/conf/zoo.cfg
+    networks:
+      - solr
+  zk2:
+    <<: *zk_default
+    container_name: zk2
+    hostname: zk2
+    ports:
+      - 2102:2181
+    environment:
+      ZOO_MY_ID: 2
+  zk3:
+    <<: *zk_default
+    container_name: zk3
+    hostname: zk3
+    ports:
+      - 2103:2181
+    environment:
+      ZOO_MY_ID: 3
+
+
+
+# docker exec -it [image-id] /bin/bash
+# docker-compose build
+# docker-compose up -d
+# docker-compose stop
