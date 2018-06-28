@@ -51,8 +51,15 @@
 # Set the ZooKeeper connection string if using an external ZooKeeper ensemble
 # e.g. host1:2181,host2:2181/chroot
 # Leave empty if not using SolrCloud
-# TODO zkhosts
-#ZK_HOST="192.168.33.10:2181,192.168.33.11:2181,192.168.33.12:2181"
+{% for zkhost in groups.zks %}
+ZK_HOST="{%
+  if loop.first
+    %}{{ zkhost }}{%
+  else
+    %}$ZK_HOST,{{ zkhost }}{%
+  endif
+%}:2181"
+{% endfor %}
 
 # Set the ZooKeeper client timeout (for SolrCloud mode)
 #ZK_CLIENT_TIMEOUT="15000"
