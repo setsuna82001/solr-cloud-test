@@ -24,11 +24,13 @@
     state:  link
 
 - name: Set Zookeeper Config
-  copy:
-    src:  zoo.cfg
+  template:
+    src:  zoo.cfg.j2
     dest: /opt/zookeeper/conf/zoo.cfg
 
 - name: Set zookeeper lib directories
   file:
     path: /var/lib/zookeeper
     state:  directory
+
+# TODO myid

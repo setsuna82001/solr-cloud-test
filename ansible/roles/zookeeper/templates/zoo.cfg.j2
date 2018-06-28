@@ -27,7 +27,6 @@ clientPort=2181
 # Set to "0" to disable auto purge feature
 #autopurge.purgeInterval=1
 
-# TODO server node
-#server.1=192.168.33.10:2888:3888
-#server.2=192.168.33.11:2888:3888
-#server.3=192.168.33.12:2888:3888
+{% for zkhost in groups.zks %}
+#server{{ loop.index }}={{ zkhost }}:2888:3888
+{% endfor %}
