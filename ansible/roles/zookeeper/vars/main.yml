@@ -1,0 +1,3 @@
+---
+version:  3.4.11
+dlurl:    "https://archive.apache.org/dist/zookeeper/zookeeper-{{ version }}/zookeeper-{{ version }}.tar.gz"

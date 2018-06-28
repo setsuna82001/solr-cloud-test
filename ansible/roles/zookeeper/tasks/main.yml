@@ -1,12 +1,25 @@
 ---
+- name: Check Zookeeper
+  stat:
+    path: "/opt/zookeeper-{{ version }}"
+  register: result
+
+- name: DownLoad Zookeeper
+  get_url:
+    url:  "{{ dlurl }}"
+    dest: "/opt/zookeeper-{{ version }}.tgz"
+  when: not result.stat.exists
+
 - name: Set Zookeeper
   unarchive:
-    src:  zookeeper-3.4.11.tar.gz
+    src:  "/opt/zookeeper-{{ version }}.tgz"
     dest: /opt
+    remote_src: yes
+  when: not result.stat.exists
 
 - name: Set Zookeeper Link
   file:
-    src:  /opt/zookeeper-3.4.11
+    src:  "/opt/zookeeper-{{ version }}"
     dest: /opt/zookeeper
     state:  link
 
@@ -14,3 +27,8 @@
   copy:
     src:  zoo.cfg
     dest: /opt/zookeeper/conf/zoo.cfg
+
+- name: Set zookeeper lib directories
+  file:
+    path: /var/lib/zookeeper
+    state:  directory
