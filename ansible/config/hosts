@@ -11,7 +11,7 @@ ansible_ssh_pass=vagrant
 
 [solrs:children]
 solr20
-#solr21
+solr21
 
 [zk10]
 192.168.33.10
