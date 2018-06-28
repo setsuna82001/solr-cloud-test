@@ -1,0 +1,34 @@
+---
+- name: Check Solr
+  stat:
+    path: "/opt/solr-{{ version }}"
+  register: result
+
+- name: DownLoad Solr
+  get_url:
+    url:  "{{ dlurl }}"
+    dest: "/opt/solr-{{ version }}.tgz"
+  when: not result.stat.exists
+
+- name: Set Solr
+  unarchive:
+    src:  "/opt/solr-{{ version }}.tgz"
+    dest: /opt
+    remote_src: yes
+  when: not result.stat.exists
+
+- name: Set Solr Link
+  file:
+    src:  "/opt/solr-{{ version }}"
+    dest: /opt/solr
+    state:  link
+
+- name: Set Solr Boot Config
+  template:
+    src:  solr.in.sh.j2
+    dest: /opt/solr/bin/solr.in.sh
+
+- name: Install lsof
+  yum:
+    name:  lsof
+    state: present
