@@ -16,7 +16,7 @@ services:
       - -f
       - -c
       - -z
-      - zk1:2181,zk2:2181
+      - zk1:2181,zk2:2181,zk3:2181
       #- -a
       #- "-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=1044"
     networks:
@@ -56,7 +56,13 @@ services:
     environment:
       ZOO_MY_ID: 3
 
-
+  centos: # 監視用
+    build: ./centos
+    container_name: centos
+    hostname: centos
+    tty: true
+    networks:
+      - solr
 
 # docker exec -it [image-id] /bin/bash
 # docker-compose build
