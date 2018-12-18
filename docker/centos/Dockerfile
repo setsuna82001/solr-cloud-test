@@ -1,3 +1,3 @@
 FROM centos:7
 
-RUN yum install -y telnet curl
+RUN yum install -y telnet curl iproute
