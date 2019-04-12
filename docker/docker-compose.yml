@@ -1,6 +1,6 @@
 version: '3'
 networks:
-  solr:
+  solr-clusters:
 services:
   solr1:  &solr_default
     container_name: solr1
@@ -20,7 +20,7 @@ services:
       #- -a
       #- "-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=1044"
     networks:
-      - solr
+      - solr-clusters
   solr2:
     <<: *solr_default
     container_name: solr2
@@ -38,7 +38,7 @@ services:
     volumes:
       - ./zookeeper/zoo.cfg:/conf/zoo.cfg
     networks:
-      - solr
+      - solr-clusters
   zk2:
     <<: *zk_default
     container_name: zk2
@@ -56,13 +56,23 @@ services:
     environment:
       ZOO_MY_ID: 3
 
+  nginx:
+    image:  nginx:1.15
+    container_name: nginx_lb
+    ports:
+      - 8900:80
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+    networks:
+      - solr-clusters
+
   centos: # 監視用
     build: ./centos
     container_name: centos
     hostname: centos
     tty: true
     networks:
-      - solr
+      - solr-clusters
 
 # docker exec -it [image-id] /bin/bash
 # docker-compose build
